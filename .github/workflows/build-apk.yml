@@ -14,20 +14,20 @@ jobs:
       - name: Checkout project
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
-          channel: stable
-          cache: true
+          distribution: temurin
+          java-version: '17'
 
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Build APK
-        run: flutter build apk --release
+      - name: Build Android APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GAVIA-AI-APK
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: android/app/build/outputs/apk/release/*.apk
